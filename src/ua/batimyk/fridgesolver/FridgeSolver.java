@@ -19,11 +19,7 @@ public class FridgeSolver {
 
         for (int y = 0; y < parentFridgeNode.getFridge().getHandlersPositions().length; y++) {
             for (int x = 0; x < parentFridgeNode.getFridge().getHandlersPositions()[y].length; x++) {
-                FridgeNode fridgeNode = new FridgeNode(parentFridgeNode, x, y);
-                if (fridgeNode.getFridge().isOpen()) {
-                    solvedFridgeNode = fridgeNode;
-                }
-                fridgeNodes.add(fridgeNode);
+                fridgeNodes.add(new FridgeNode(parentFridgeNode, x, y));
             }
         }
         return fridgeNodes;
@@ -87,6 +83,8 @@ public class FridgeSolver {
         byte[][] positions4Open = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
         byte[][] positions4_1turn = {{1, -1, 1, 1}, {1, -1, 1, 1}, {-1, -1, -1, -1}, {1, -1, 1, 1}};
         byte[][] initPositions = {{1, 1, -1, 1}, {1, 1, -1, 1}, {-1, -1, 1, -1}, {1, 1, 1, -1}};
+        byte[][] positions4x4_1 = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, 1}};
+        byte[][] positions4x4_2 = {{-1, -1, -1, -1}, {-1, 1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
 
 
         FridgeNode rootFridgeNode = new FridgeNode(new Fridge(pilotBroPositions));

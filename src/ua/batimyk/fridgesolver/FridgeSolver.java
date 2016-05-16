@@ -10,6 +10,10 @@ public class FridgeSolver {
     private FridgeNode solvedFridgeNode;
     private FridgeNode rootFridgeNode;
 
+    public void setRootFridgeNode(FridgeNode rootFridgeNode) {
+        this.rootFridgeNode = rootFridgeNode;
+    }
+
     public FridgeSolver(FridgeNode rootFridgeNode) {
         this.rootFridgeNode = rootFridgeNode;
     }
@@ -29,14 +33,22 @@ public class FridgeSolver {
         boolean isOpen = false;
         Set<FridgeNode> fridgeNodes = new HashSet<>();
 
-        for (FridgeNode pfn : parentFridgeNodes) {
-            for (FridgeNode fn : turnAllHandlers(pfn)) {
-                if (fn.getFridge().isOpen()) {
-                    isOpen = true;
-                    solvedFridgeNode = fn;
-                    break;
+        Iterator<FridgeNode> parentFridgeNodesIterator = parentFridgeNodes.iterator();
+        while (parentFridgeNodesIterator.hasNext() && !isOpen) {
+            FridgeNode pfn = parentFridgeNodesIterator.next();
+            if (pfn.getFridge().isOpen()) {
+                isOpen = true;
+                solvedFridgeNode = pfn;
+            } else {
+                Iterator<FridgeNode> fridgeNodesIterator = turnAllHandlers(pfn).iterator();
+                while (fridgeNodesIterator.hasNext() && !isOpen) {
+                    FridgeNode fn = fridgeNodesIterator.next();
+                    if (fn.getFridge().isOpen()) {
+                        isOpen = true;
+                        solvedFridgeNode = fn;
+                    }
+                    fridgeNodes.add(fn);
                 }
-                fridgeNodes.add(fn);
             }
         }
 
@@ -45,7 +57,7 @@ public class FridgeSolver {
         }
     }
 
-    private ArrayList<FridgeNode> getSolutionChain() {
+    public ArrayList<FridgeNode> getSolutionChain() {
         Set<FridgeNode> parentFridgeNodes = new HashSet<>();
 
         parentFridgeNodes.add(rootFridgeNode);
@@ -65,8 +77,9 @@ public class FridgeSolver {
 
     public void printSolutionTurns() {
 
+        System.out.println("Initial state: ");
         System.out.println(rootFridgeNode.getFridge());
-        System.out.println();
+        System.out.println("\nSolution:\n");
         int count = 1;
         for (FridgeNode fn : getSolutionChain()) {
             System.out.println(count++ + ":[" + fn.getX() + "," + fn.getY() + "]" + fn.getFridge());
@@ -74,17 +87,7 @@ public class FridgeSolver {
     }
 
     public static void main(String[] args) {
-
-        byte[][] positions2x2 = {{-1, -1}, {-1, 1}};
-        byte[][] positions3x3 = {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}};
-        byte[][] positions4x4 = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
         byte[][] pilotBroPositions = {{1, -1, 1, -1}, {-1, 1, 1, 1}, {-1, 1, 1, -1}, {-1, 1, -1, 1}};
-        byte[][] positions4Open = {{1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1}};
-        byte[][] positions4_1turn = {{1, -1, 1, 1}, {1, -1, 1, 1}, {-1, -1, -1, -1}, {1, -1, 1, 1}};
-        byte[][] initPositions = {{1, 1, -1, 1}, {1, 1, -1, 1}, {-1, -1, 1, -1}, {1, 1, 1, -1}};
-        byte[][] positions4x4_1 = {{-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, 1}};
-        byte[][] positions4x4_2 = {{-1, -1, -1, -1}, {-1, 1, -1, -1}, {-1, -1, -1, -1}, {-1, -1, -1, -1}};
-
         FridgeNode rootFridgeNode = new FridgeNode(new Fridge(pilotBroPositions));
         FridgeSolver fridgeSolver = new FridgeSolver(rootFridgeNode);
 
